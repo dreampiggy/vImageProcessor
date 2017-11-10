@@ -24,7 +24,7 @@ static vImage_CGImageFormat vImageFormatARGB8888 = (vImage_CGImageFormat) {
 
 + (CGImageRef)alphaBlendedImageWithImage:(CGImageRef)aImage color:(CGColorRef)color
 {
-    vImage_Buffer a_buffer = {}, b_buffer = {}, output_buffer = {};
+    __block vImage_Buffer a_buffer = {}, b_buffer = {}, output_buffer = {};
     @onExit {
         if (a_buffer.data) free(a_buffer.data);
         if (b_buffer.data) free(b_buffer.data);
@@ -72,7 +72,7 @@ static vImage_CGImageFormat vImageFormatARGB8888 = (vImage_CGImageFormat) {
 
 + (CGImageRef)alphaBlendedImageWithImage:(CGImageRef)aImage image:(CGImageRef)bImage offset:(CGVector)offset
 {
-    vImage_Buffer a_buffer = {}, b_buffer = {}, c_buffer = {}, output_buffer = {};
+    __block vImage_Buffer a_buffer = {}, b_buffer = {}, c_buffer = {}, output_buffer = {};
     @onExit {
         if (a_buffer.data) free(a_buffer.data);
         if (b_buffer.data) free(b_buffer.data);
@@ -115,7 +115,7 @@ static vImage_CGImageFormat vImageFormatARGB8888 = (vImage_CGImageFormat) {
 
 + (CGImageRef)scaledImageWithImage:(CGImageRef)aImage size:(CGSize)size
 {
-    vImage_Buffer a_buffer = {}, output_buffer = {};
+    __block vImage_Buffer a_buffer = {}, output_buffer = {};
     @onExit {
         if (a_buffer.data) free(a_buffer.data);
         if (output_buffer.data) free(output_buffer.data);
@@ -140,7 +140,7 @@ static vImage_CGImageFormat vImageFormatARGB8888 = (vImage_CGImageFormat) {
 
 + (CGImageRef)croppedImageWithImage:(CGImageRef)aImage rect:(CGRect)rect
 {
-    vImage_Buffer a_buffer = {}, output_buffer = {};
+    __block vImage_Buffer a_buffer = {}, output_buffer = {};
     @onExit {
         if (a_buffer.data) free(a_buffer.data);
         if (output_buffer.data) free(output_buffer.data);
@@ -171,7 +171,7 @@ static vImage_CGImageFormat vImageFormatARGB8888 = (vImage_CGImageFormat) {
 
 + (CGImageRef)flippedImageWithImage:(CGImageRef)aImage horizontal:(BOOL)horizontal
 {
-    vImage_Buffer a_buffer = {}, output_buffer = {};
+    __block vImage_Buffer a_buffer = {}, output_buffer = {};
     @onExit {
         if (a_buffer.data) free(a_buffer.data);
         if (output_buffer.data) free(output_buffer.data);
@@ -201,7 +201,7 @@ static vImage_CGImageFormat vImageFormatARGB8888 = (vImage_CGImageFormat) {
 
 + (CGImageRef)rotatedImageWithImage:(CGImageRef)aImage radians:(CGFloat)radians
 {
-    vImage_Buffer a_buffer = {}, output_buffer = {};
+    __block vImage_Buffer a_buffer = {}, output_buffer = {};
     @onExit {
         if (a_buffer.data) free(a_buffer.data);
         if (output_buffer.data) free(output_buffer.data);
@@ -230,7 +230,7 @@ static vImage_CGImageFormat vImageFormatARGB8888 = (vImage_CGImageFormat) {
 
 + (CGImageRef)shearedImageWithImage:(CGImageRef)aImage horizontal:(BOOL)horizontal offset:(CGVector)offset translation:(CGFloat)translation slope:(CGFloat)slope scale:(CGFloat)scale
 {
-    vImage_Buffer a_buffer = {}, output_buffer = {};
+    __block vImage_Buffer a_buffer = {}, output_buffer = {};
     @onExit {
         if (a_buffer.data) free(a_buffer.data);
         if (output_buffer.data) free(output_buffer.data);
@@ -263,7 +263,7 @@ static vImage_CGImageFormat vImageFormatARGB8888 = (vImage_CGImageFormat) {
 
 + (CGImageRef)affineTransformedImageWithImage:(CGImageRef)aImage transform:(CGAffineTransform)transform
 {
-    vImage_Buffer a_buffer = {}, output_buffer = {};
+    __block vImage_Buffer a_buffer = {}, output_buffer = {};
     @onExit {
         if (a_buffer.data) free(a_buffer.data);
         if (output_buffer.data) free(output_buffer.data);
