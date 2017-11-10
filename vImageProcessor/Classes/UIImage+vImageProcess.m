@@ -18,9 +18,9 @@
     return image;
 }
 
-- (UIImage *)vImage_alphaBlendedImageWithImage:(UIImage *)aImage
+- (UIImage *)vImage_alphaBlendedImageWithImage:(UIImage *)aImage offset:(CGVector)offset
 {
-    CGImageRef imageRef = [vImageProcessor alphaBlendedImageWithImage:self.CGImage image:aImage.CGImage];
+    CGImageRef imageRef = [vImageProcessor alphaBlendedImageWithImage:self.CGImage image:aImage.CGImage offset:offset];
     UIImage *image = [UIImage imageWithCGImage:imageRef scale:self.scale orientation:self.imageOrientation];
     CGImageRelease(imageRef);
     return image;

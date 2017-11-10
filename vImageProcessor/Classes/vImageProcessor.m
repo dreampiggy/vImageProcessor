@@ -70,12 +70,13 @@ static vImage_CGImageFormat vImageFormatARGB8888 = (vImage_CGImageFormat) {
     return outputImage;
 }
 
-+ (CGImageRef)alphaBlendedImageWithImage:(CGImageRef)aImage image:(CGImageRef)bImage
++ (CGImageRef)alphaBlendedImageWithImage:(CGImageRef)aImage image:(CGImageRef)bImage offset:(CGVector)offset
 {
-    vImage_Buffer a_buffer = {}, b_buffer = {}, output_buffer = {};
+    vImage_Buffer a_buffer = {}, b_buffer = {}, c_buffer = {}, output_buffer = {};
     @onExit {
         if (a_buffer.data) free(a_buffer.data);
         if (b_buffer.data) free(b_buffer.data);
+        if (c_buffer.data) free(c_buffer.data);
         if (output_buffer.data) free(output_buffer.data);
     };
     
@@ -84,13 +85,26 @@ static vImage_CGImageFormat vImageFormatARGB8888 = (vImage_CGImageFormat) {
     vImage_Error b_ret = vImageBuffer_InitWithCGImage(&b_buffer, &vImageFormatARGB8888, NULL, bImage, kvImageNoFlags);
     if (b_ret != kvImageNoError) return NULL;
     
+    // scale mask image to same size
+    c_buffer.width = a_buffer.width;
+    c_buffer.height = a_buffer.height;
+    c_buffer.rowBytes = a_buffer.rowBytes;
+    c_buffer.data = malloc(c_buffer.rowBytes * c_buffer.height);
+    if (!c_buffer.data) return NULL;
+    
+    CGAffineTransform transform = CGAffineTransformMakeTranslation(offset.dx, offset.dy);
+    vImage_CGAffineTransform cg_transform = *((vImage_CGAffineTransform *)&transform);
+    Pixel_8888 clear_color = {0};
+    vImage_Error c_ret = vImageAffineWarpCG_ARGB8888(&b_buffer, &c_buffer, NULL, &cg_transform, clear_color, kvImageBackgroundColorFill);
+    if (c_ret != kvImageNoError) return NULL;
+    
     output_buffer.width = a_buffer.width;
     output_buffer.height = a_buffer.height;
     output_buffer.rowBytes = a_buffer.rowBytes;
     output_buffer.data = malloc(output_buffer.rowBytes * output_buffer.height);
     if (!output_buffer.data) return NULL;
     
-    vImage_Error ret = vImageAlphaBlend_ARGB8888(&b_buffer, &a_buffer, &output_buffer, kvImageNoFlags);
+    vImage_Error ret = vImageAlphaBlend_ARGB8888(&c_buffer, &a_buffer, &output_buffer, kvImageNoFlags);
     if (ret != kvImageNoError) return NULL;
     
     CGImageRef outputImage = vImageCreateCGImageFromBuffer(&output_buffer, &vImageFormatARGB8888, NULL, NULL, kvImageNoFlags, &ret);

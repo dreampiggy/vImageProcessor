@@ -45,6 +45,7 @@
     [self addSubview:self.title];
     self.imageView.contentMode = UIViewContentModeScaleAspectFit;
     self.title.textAlignment = NSTextAlignmentCenter;
+    self.title.font = [UIFont boldSystemFontOfSize:20.f];
 }
 
 - (void)layoutSubviews
@@ -92,7 +93,7 @@
     
     vImagePreviewView *view3 = [vImagePreviewView new];
     [self.scrollView addSubview:view3];
-    view3.imageView.image = [testImage vImage_alphaBlendedImageWithImage:blendImage];
+    view3.imageView.image = [testImage vImage_alphaBlendedImageWithImage:blendImage offset:CGVectorMake(500, 500)];
     view3.title.text = @"Alpha Blend Image";
     
     vImagePreviewView *view4 = [vImagePreviewView new];
@@ -102,7 +103,7 @@
     
     vImagePreviewView *view5 = [vImagePreviewView new];
     [self.scrollView addSubview:view5];
-    view5.imageView.image = [testImage vImage_croppedImageWithRect:CGRectMake(0, 0, 1000, 1000)];
+    view5.imageView.image = [testImage vImage_croppedImageWithRect:CGRectMake(1000, 1000, 2000, 2000)];
     view5.title.text = @"Crop";
     
     vImagePreviewView *view6 = [vImagePreviewView new];
@@ -131,7 +132,7 @@
     [super viewDidLayoutSubviews];
     self.scrollView.frame = self.view.bounds;
     CGFloat height = 0;
-    CGFloat length = MIN(CGRectGetWidth(self.scrollView.bounds), CGRectGetHeight(self.scrollView.bounds));
+    CGFloat length = CGRectGetWidth(self.scrollView.bounds);
     NSUInteger index = 0;
     for (UIView * view in self.scrollView.subviews) {
         if ([view isKindOfClass:[vImagePreviewView class]]) {
@@ -142,6 +143,11 @@
         }
     }
     self.scrollView.contentSize = CGSizeMake(CGRectGetWidth(self.scrollView.bounds), height);
+}
+
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;
 }
 
 - (void)didReceiveMemoryWarning

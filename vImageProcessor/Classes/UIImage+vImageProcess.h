@@ -12,10 +12,10 @@
 // apply alpha blending for color
 - (UIImage *)vImage_alphaBlendedImageWithColor:(UIColor *)color;
 // apply alpha blending for image
-- (UIImage *)vImage_alphaBlendedImageWithImage:(UIImage *)aImage;
+- (UIImage *)vImage_alphaBlendedImageWithImage:(UIImage *)aImage offset:(CGVector)offset;
 // apply scale for size
 - (UIImage *)vImage_scaledImageWithSize:(CGSize)size;
-// apply clip for rect
+// apply cropping for rect
 - (UIImage *)vImage_croppedImageWithRect:(CGRect)rect;
 // apply vertical or horizontal flipping
 - (UIImage *)vImage_flippedImageWithHorizontal:(BOOL)horizontal;
