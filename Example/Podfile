@@ -1,0 +1,12 @@
+use_frameworks!
+
+target 'vImageProcessor_Example' do
+  pod 'vImageProcessor', :path => '../'
+
+  target 'vImageProcessor_Tests' do
+    inherit! :search_paths
+
+    pod 'Specta'
+  pod 'Expecta'
+  end
+end
