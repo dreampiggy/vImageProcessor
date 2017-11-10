@@ -27,7 +27,7 @@ This project is more like a demo to show how vImage can be used to benefit some 
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
-There are 9 demo cases to show the feature about vImage. Currently it do not have some powerful feature like [Convolution](https://en.wikipedia.org/wiki/Kernel_\(image_processing\)) or [vDSP](https://developer.apple.com/library/content/documentation/Performance/Conceptual/vDSP_Programming_Guide/Introduction/Introduction.html), because it need more knowledge about [DSP](https://en.wikipedia.org/wiki/Digital_signal_processing). Through Accelerate and vImage support these feature, [GPUImage](https://github.com/BradLarson/GPUImage) may be a better place to get start.
+There are 8 demo cases to show the feature about vImage. Currently it do not have some powerful feature like [Convolution](https://en.wikipedia.org/wiki/Kernel_\(image_processing\)) or [vDSP](https://developer.apple.com/library/content/documentation/Performance/Conceptual/vDSP_Programming_Guide/Introduction/Introduction.html), because it need more knowledge about [DSP](https://en.wikipedia.org/wiki/Digital_signal_processing). Through Accelerate and vImage support these feature, [GPUImage](https://github.com/BradLarson/GPUImage) may be a better place to get start.
 
 ## Requirements
 
