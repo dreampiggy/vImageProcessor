@@ -16,11 +16,15 @@ static vImage_CGImageFormat vImageFormatARGB8888 = (vImage_CGImageFormat) {
     .bitsPerComponent = 8,
     .bitsPerPixel = 32,
     .colorSpace = NULL,
-    .bitmapInfo = (CGBitmapInfo)kCGImageAlphaFirst,
+    .bitmapInfo = kCGImageAlphaFirst | kCGBitmapByteOrderDefault,
     .version = 0,
     .decode = NULL,
     .renderingIntent = kCGRenderingIntentDefault,
 };
+
+static inline size_t vImageByteAlign(size_t size, size_t alignment) {
+    return ((size + (alignment - 1)) / alignment) * alignment;
+}
 
 + (CGImageRef)alphaBlendedImageWithImage:(CGImageRef)aImage color:(CGColorRef)color
 {
@@ -125,7 +129,7 @@ static vImage_CGImageFormat vImageFormatARGB8888 = (vImage_CGImageFormat) {
     if (a_ret != kvImageNoError) return NULL;
     output_buffer.width = MAX(size.width, 0);
     output_buffer.height = MAX(size.height, 0);
-    output_buffer.rowBytes = output_buffer.width * 4;
+    output_buffer.rowBytes = vImageByteAlign(output_buffer.width * 4, 64);
     output_buffer.data = malloc(output_buffer.rowBytes * output_buffer.height);
     if (!output_buffer.data) return NULL;
     
@@ -150,7 +154,7 @@ static vImage_CGImageFormat vImageFormatARGB8888 = (vImage_CGImageFormat) {
     if (a_ret != kvImageNoError) return NULL;
     output_buffer.width = MAX(CGRectGetWidth(rect), 0);
     output_buffer.height = MAX(CGRectGetHeight(rect), 0);
-    output_buffer.rowBytes = output_buffer.width * 4;
+    output_buffer.rowBytes = vImageByteAlign(output_buffer.width * 4, 64);
     output_buffer.data = malloc(output_buffer.rowBytes * output_buffer.height);
     if (!output_buffer.data) return NULL;
     
@@ -214,7 +218,7 @@ static vImage_CGImageFormat vImageFormatARGB8888 = (vImage_CGImageFormat) {
     size = CGSizeApplyAffineTransform(size, transform);
     output_buffer.width = ABS(size.width);
     output_buffer.height = ABS(size.height);
-    output_buffer.rowBytes = output_buffer.width * 4;
+    output_buffer.rowBytes = vImageByteAlign(output_buffer.width * 4, 64);
     output_buffer.data = malloc(output_buffer.rowBytes * output_buffer.height);
     if (!output_buffer.data) return NULL;
     
@@ -240,7 +244,7 @@ static vImage_CGImageFormat vImageFormatARGB8888 = (vImage_CGImageFormat) {
     if (a_ret != kvImageNoError) return NULL;
     output_buffer.width = MAX(a_buffer.width - offset.dx, 0);
     output_buffer.height = MAX(a_buffer.height - offset.dy, 0);
-    output_buffer.rowBytes = output_buffer.width * 4;
+    output_buffer.rowBytes = vImageByteAlign(output_buffer.width * 4, 64);
     output_buffer.data = malloc(output_buffer.rowBytes * output_buffer.height);
     if (!output_buffer.data) return NULL;
     
@@ -275,7 +279,7 @@ static vImage_CGImageFormat vImageFormatARGB8888 = (vImage_CGImageFormat) {
     size = CGSizeApplyAffineTransform(size, transform);
     output_buffer.width = ABS(size.width);
     output_buffer.height = ABS(size.height);
-    output_buffer.rowBytes = output_buffer.width * 4;
+    output_buffer.rowBytes = vImageByteAlign(output_buffer.width * 4, 64);
     output_buffer.data = malloc(output_buffer.rowBytes * output_buffer.height);
     if (!output_buffer.data) return NULL;
     
