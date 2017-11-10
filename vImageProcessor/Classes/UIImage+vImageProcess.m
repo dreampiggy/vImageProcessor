@@ -20,6 +20,11 @@ static CGColorSpaceRef vImageColorSpaceGetDeviceRGB() {
     return colorSpace;
 }
 
+// 64 bytes align to avoid extra `CA::Render::aligned_malloc` call
+static inline size_t vImageByteAlign(size_t size, size_t alignment) {
+    return ((size + (alignment - 1)) / alignment) * alignment;
+}
+
 // Core Animation specify premultiplied-alpha instead of vImage's format
 // This will improving rendering performance(frame rate) and avoid extra `CA::Render::copy_image` call
 static CGImageRef vImageCreateDecompressedImage(CGImageRef image)
@@ -33,7 +38,7 @@ static CGImageRef vImageCreateDecompressedImage(CGImageRef image)
     CGFloat height = CGImageGetHeight(image);
     CGRect rect = CGRectMake(0, 0, width, height);
     CGBitmapInfo bitmapInfo = kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrderDefault;
-    context = CGBitmapContextCreate(NULL, width, height, 8, 4 * width, vImageColorSpaceGetDeviceRGB(), bitmapInfo);    
+    context = CGBitmapContextCreate(NULL, width, height, 8, vImageByteAlign(4 * width, 64), vImageColorSpaceGetDeviceRGB(), bitmapInfo);    
     if (!context) {
         return CGImageCreateCopy(image);
     }
