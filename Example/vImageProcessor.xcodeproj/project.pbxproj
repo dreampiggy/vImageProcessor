@@ -255,6 +255,9 @@
 				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = dreampiggy;
 				TargetAttributes = {
+					6003F589195388D20070C39A = {
+						DevelopmentTeam = H7A54KHQVR;
+					};
 					6003F5AD195388D20070C39A = {
 						TestTargetID = 6003F589195388D20070C39A;
 					};
@@ -530,6 +533,7 @@
 			baseConfigurationReference = BA239CF8E605A0E8FB33529B /* Pods-vImageProcessor_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = H7A54KHQVR;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "vImageProcessor/vImageProcessor-Prefix.pch";
 				INFOPLIST_FILE = "vImageProcessor/vImageProcessor-Info.plist";
@@ -545,6 +549,7 @@
 			baseConfigurationReference = A284D57B80CE3FBBC55729CE /* Pods-vImageProcessor_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = H7A54KHQVR;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "vImageProcessor/vImageProcessor-Prefix.pch";
 				INFOPLIST_FILE = "vImageProcessor/vImageProcessor-Info.plist";
