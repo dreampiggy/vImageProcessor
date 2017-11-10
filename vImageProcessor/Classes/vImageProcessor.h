@@ -10,6 +10,8 @@
 #import <CoreGraphics/CoreGraphics.h>
 
 // vImage for image processing
+// Returned CGImage are new created and you are responsed to free it by `CGImageRelease` after usage.
+// These methods use Core Graphics coordinate system instead of UIKit coordinate system, which is Y-axis positive. Ensure your call with offset, rect, affine transform with the correct coordinate system.
 
 @interface vImageProcessor : NSObject
 

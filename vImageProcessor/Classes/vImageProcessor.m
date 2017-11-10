@@ -134,13 +134,25 @@ static vImage_CGImageFormat vImageFormatARGB8888 = (vImage_CGImageFormat) {
     
     vImage_Error a_ret = vImageBuffer_InitWithCGImage(&a_buffer, &vImageFormatARGB8888, NULL, aImage, kvImageNoFlags);
     if (a_ret != kvImageNoError) return NULL;
-    output_buffer.width = a_buffer.width;
-    output_buffer.height = a_buffer.height;
-    output_buffer.rowBytes = a_buffer.rowBytes;
+    output_buffer.width = MAX(CGRectGetWidth(rect), 0);
+    output_buffer.height = MAX(CGRectGetHeight(rect), 0);
+    output_buffer.rowBytes = output_buffer.width * 4;
     output_buffer.data = malloc(output_buffer.rowBytes * output_buffer.height);
     if (!output_buffer.data) return NULL;
     
-    return NULL;
+    // use translation to x & y axis and scale down output size, do not need resampling
+    CGFloat tx = CGRectGetMinX(rect);
+    CGFloat ty = CGRectGetMinY(rect);
+    CGAffineTransform transform = CGAffineTransformMakeTranslation(-tx, -ty);
+    vImage_CGAffineTransform cg_transform = *((vImage_CGAffineTransform *)&transform);
+    Pixel_8888 clear_color = {0};
+    vImage_Error ret = vImageAffineWarpCG_ARGB8888(&a_buffer, &output_buffer, NULL, &cg_transform, clear_color, kvImageBackgroundColorFill);
+    if (ret != kvImageNoError) return NULL;
+    
+    CGImageRef outputImage = vImageCreateCGImageFromBuffer(&output_buffer, &vImageFormatARGB8888, NULL, NULL, kvImageNoFlags, &ret);
+    if (ret != kvImageNoError) return NULL;
+    
+    return outputImage;
 }
 
 + (CGImageRef)flippedImageWithImage:(CGImageRef)aImage horizontal:(BOOL)horizontal
@@ -183,9 +195,12 @@ static vImage_CGImageFormat vImageFormatARGB8888 = (vImage_CGImageFormat) {
     
     vImage_Error a_ret = vImageBuffer_InitWithCGImage(&a_buffer, &vImageFormatARGB8888, NULL, aImage, kvImageNoFlags);
     if (a_ret != kvImageNoError) return NULL;
-    output_buffer.width = a_buffer.width;
-    output_buffer.height = a_buffer.height;
-    output_buffer.rowBytes = a_buffer.rowBytes;
+    CGSize size = CGSizeMake(a_buffer.width, a_buffer.height);
+    CGAffineTransform transform = CGAffineTransformMakeRotation(radians);
+    size = CGSizeApplyAffineTransform(size, transform);
+    output_buffer.width = ABS(size.width);
+    output_buffer.height = ABS(size.height);
+    output_buffer.rowBytes = output_buffer.width * 4;
     output_buffer.data = malloc(output_buffer.rowBytes * output_buffer.height);
     if (!output_buffer.data) return NULL;
     
@@ -242,9 +257,11 @@ static vImage_CGImageFormat vImageFormatARGB8888 = (vImage_CGImageFormat) {
     
     vImage_Error a_ret = vImageBuffer_InitWithCGImage(&a_buffer, &vImageFormatARGB8888, NULL, aImage, kvImageNoFlags);
     if (a_ret != kvImageNoError) return NULL;
-    output_buffer.width = a_buffer.width;
-    output_buffer.height = a_buffer.height;
-    output_buffer.rowBytes = a_buffer.rowBytes;
+    CGSize size = CGSizeMake(a_buffer.width, a_buffer.height);
+    size = CGSizeApplyAffineTransform(size, transform);
+    output_buffer.width = ABS(size.width);
+    output_buffer.height = ABS(size.height);
+    output_buffer.rowBytes = output_buffer.width * 4;
     output_buffer.data = malloc(output_buffer.rowBytes * output_buffer.height);
     if (!output_buffer.data) return NULL;
     

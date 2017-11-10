@@ -122,7 +122,7 @@
     
     vImagePreviewView *view9 = [vImagePreviewView new];
     [self.scrollView addSubview:view9];
-    view9.imageView.image = [testImage vImage_affineTransformedImageWithTransform:CGAffineTransformScale(CGAffineTransformMakeTranslation(100, 0), 0.5, 1)];
+    view9.imageView.image = [testImage vImage_affineTransformedImageWithTransform:CGAffineTransformMake(1, 0, 0, 0.5, 0, 500)];
     view9.title.text = @"Affine Transform";
 }
 
