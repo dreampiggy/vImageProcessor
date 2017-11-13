@@ -74,7 +74,7 @@ static inline size_t vImageByteAlign(size_t size, size_t alignment) {
     return outputImage;
 }
 
-+ (CGImageRef)alphaBlendedImageWithImage:(CGImageRef)aImage image:(CGImageRef)bImage offset:(CGVector)offset
++ (CGImageRef)alphaBlendedImageWithImage:(CGImageRef)aImage image:(CGImageRef)bImage point:(CGPoint)point
 {
     __block vImage_Buffer a_buffer = {}, b_buffer = {}, c_buffer = {}, output_buffer = {};
     @onExit {
@@ -96,7 +96,7 @@ static inline size_t vImageByteAlign(size_t size, size_t alignment) {
     c_buffer.data = malloc(c_buffer.rowBytes * c_buffer.height);
     if (!c_buffer.data) return NULL;
     
-    CGAffineTransform transform = CGAffineTransformMakeTranslation(offset.dx, offset.dy);
+    CGAffineTransform transform = CGAffineTransformMakeTranslation(point.x, point.y);
     vImage_CGAffineTransform cg_transform = *((vImage_CGAffineTransform *)&transform);
     Pixel_8888 clear_color = {0};
     vImage_Error c_ret = vImageAffineWarpCG_ARGB8888(&b_buffer, &c_buffer, NULL, &cg_transform, clear_color, kvImageBackgroundColorFill);

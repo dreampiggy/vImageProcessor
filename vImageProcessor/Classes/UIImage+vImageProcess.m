@@ -55,9 +55,9 @@ static CGImageRef vImageCreateDecompressedImage(CGImageRef image)
     return image;
 }
 
-- (UIImage *)vImage_alphaBlendedImageWithImage:(UIImage *)aImage offset:(CGVector)offset
+- (UIImage *)vImage_alphaBlendedImageWithImage:(UIImage *)aImage point:(CGPoint)point
 {
-    CGImageRef imageRef = [vImageProcessor alphaBlendedImageWithImage:self.CGImage image:aImage.CGImage offset:offset];
+    CGImageRef imageRef = [vImageProcessor alphaBlendedImageWithImage:self.CGImage image:aImage.CGImage point:point];
     imageRef = vImageCreateDecompressedImage(imageRef);
     UIImage *image = [UIImage imageWithCGImage:imageRef scale:self.scale orientation:self.imageOrientation];
     CGImageRelease(imageRef);

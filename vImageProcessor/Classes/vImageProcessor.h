@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 // apply alpha blending for color
 + (CGImageRef _Nullable)alphaBlendedImageWithImage:(CGImageRef)aImage color:(CGColorRef)color;
 // apply alpha blending for image
-+ (CGImageRef _Nullable)alphaBlendedImageWithImage:(CGImageRef)aImage image:(CGImageRef)bImage offset:(CGVector)offset;
++ (CGImageRef _Nullable)alphaBlendedImageWithImage:(CGImageRef)aImage image:(CGImageRef)bImage point:(CGPoint)point;
 // apply scale for size
 + (CGImageRef _Nullable)scaledImageWithImage:(CGImageRef)aImage size:(CGSize)size;
 // apply cropping for rect

@@ -12,7 +12,7 @@
 // apply alpha blending for color
 - (UIImage *)vImage_alphaBlendedImageWithColor:(UIColor *)color;
 // apply alpha blending for image
-- (UIImage *)vImage_alphaBlendedImageWithImage:(UIImage *)aImage offset:(CGVector)offset;
+- (UIImage *)vImage_alphaBlendedImageWithImage:(UIImage *)aImage point:(CGPoint)point;
 // apply scale for size
 - (UIImage *)vImage_scaledImageWithSize:(CGSize)size;
 // apply cropping for rect

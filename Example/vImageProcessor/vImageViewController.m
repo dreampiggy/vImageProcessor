@@ -93,7 +93,7 @@
     
     vImagePreviewView *view3 = [vImagePreviewView new];
     [self.scrollView addSubview:view3];
-    view3.imageView.image = [testImage vImage_alphaBlendedImageWithImage:blendImage offset:CGVectorMake(500, 500)];
+    view3.imageView.image = [testImage vImage_alphaBlendedImageWithImage:blendImage point:CGPointMake(500, 500)];
     view3.title.text = @"Alpha Blend Image";
     
     vImagePreviewView *view4 = [vImagePreviewView new];
