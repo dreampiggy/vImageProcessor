@@ -31,19 +31,8 @@ There are 8 demo cases to show the feature about vImage. Currently it do not hav
 
 ## Requirements
 
-For UIKit and AppKit wrapper and this pod:
-
 + iOS 7+
 + macOS 10.8+
-+ tvOS 9+
-+ watchOS 2+
-
-For `vImageProcessor` class only:
-
-iOS/macOS/tvOS/watchOS version which support vImage framework, means:
-
-+ iOS 5+
-+ macOS 10.3+
 + tvOS 9+
 + watchOS 2+
 
