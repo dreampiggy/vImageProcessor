@@ -5,6 +5,8 @@
 //  Created by lizhuoli on 2017/11/10.
 //
 
+#if TARGET_OS_IOS || TARGET_OS_TV || TARGET_OS_WATCH
+
 #import "UIImage+vImageProcess.h"
 #import "vImageProcessor.h"
 #import <libextobjc/extobjc.h>
@@ -25,10 +27,33 @@ static inline size_t vImageByteAlign(size_t size, size_t alignment) {
     return ((size + (alignment - 1)) / alignment) * alignment;
 }
 
+// Convert UIKit coordinate system to Core Graphics coordinate system for CGRect
+static inline CGRect vImageRectConvert(CGRect rect, CGFloat height) {
+    CGFloat y = height - CGRectGetMaxY(rect);
+    return CGRectMake(rect.origin.x, y, rect.size.width, rect.size.height);
+}
+
+// Convert UIKit coordinate system to Core Graphics coordinate system for CGPoint
+static inline CGPoint vImagePointConvert(CGPoint point, CGFloat height) {
+    CGFloat y = height - point.y;
+    return CGPointMake(point.x, y);
+}
+
+// Convert UIKit coordinate system to Core Graphics coordinate system for CGFloat Radians
+static inline CGFloat vImageRadiansConvert(CGFloat radians) {
+    return M_PI * 2 - radians;
+}
+
+// Convert UIKit coordinate system to Core Graphics coordinate system for CGVector
+static inline CGVector vImageVectorConvert(CGVector vector) {
+    return CGVectorMake(vector.dx, -vector.dy);
+}
+
 // Core Animation specify premultiplied-alpha instead of vImage's format
 // This will improving rendering performance(frame rate) and avoid extra `CA::Render::copy_image` call
 static CGImageRef vImageCreateDecompressedImage(CGImageRef image)
 {
+    CGImageRetain(image);
     __block CGContextRef context = NULL;
     @onExit {
         if (context) CFRelease(context);
@@ -48,8 +73,9 @@ static CGImageRef vImageCreateDecompressedImage(CGImageRef image)
 
 - (UIImage *)vImage_alphaBlendedImageWithColor:(UIColor *)color
 {
-    CGImageRef imageRef = [vImageProcessor alphaBlendedImageWithImage:self.CGImage color:color.CGColor];
-    imageRef = vImageCreateDecompressedImage(imageRef);
+    CGImageRef processedImage = [vImageProcessor alphaBlendedImageWithImage:self.CGImage color:color.CGColor];
+    CGImageRef imageRef = vImageCreateDecompressedImage(processedImage);
+    CGImageRelease(processedImage);
     UIImage *image = [UIImage imageWithCGImage:imageRef scale:self.scale orientation:self.imageOrientation];
     CGImageRelease(imageRef);
     return image;
@@ -57,8 +83,9 @@ static CGImageRef vImageCreateDecompressedImage(CGImageRef image)
 
 - (UIImage *)vImage_alphaBlendedImageWithImage:(UIImage *)aImage point:(CGPoint)point
 {
-    CGImageRef imageRef = [vImageProcessor alphaBlendedImageWithImage:self.CGImage image:aImage.CGImage point:point];
-    imageRef = vImageCreateDecompressedImage(imageRef);
+    CGImageRef processedImage = [vImageProcessor alphaBlendedImageWithImage:self.CGImage image:aImage.CGImage point:vImagePointConvert(point, CGImageGetHeight(self.CGImage))];
+    CGImageRef imageRef = vImageCreateDecompressedImage(processedImage);
+    CGImageRelease(processedImage);
     UIImage *image = [UIImage imageWithCGImage:imageRef scale:self.scale orientation:self.imageOrientation];
     CGImageRelease(imageRef);
     return image;
@@ -66,8 +93,9 @@ static CGImageRef vImageCreateDecompressedImage(CGImageRef image)
 
 - (UIImage *)vImage_scaledImageWithSize:(CGSize)size
 {
-    CGImageRef imageRef = [vImageProcessor scaledImageWithImage:self.CGImage size:size];
-    imageRef = vImageCreateDecompressedImage(imageRef);
+    CGImageRef processedImage = [vImageProcessor scaledImageWithImage:self.CGImage size:size];
+    CGImageRef imageRef = vImageCreateDecompressedImage(processedImage);
+    CGImageRelease(processedImage);
     UIImage *image = [UIImage imageWithCGImage:imageRef scale:self.scale orientation:self.imageOrientation];
     CGImageRelease(imageRef);
     return image;
@@ -75,8 +103,9 @@ static CGImageRef vImageCreateDecompressedImage(CGImageRef image)
 
 - (UIImage *)vImage_croppedImageWithRect:(CGRect)rect
 {
-    CGImageRef imageRef = [vImageProcessor croppedImageWithImage:self.CGImage rect:rect];
-    imageRef = vImageCreateDecompressedImage(imageRef);
+    CGImageRef processedImage = [vImageProcessor croppedImageWithImage:self.CGImage rect:vImageRectConvert(rect, CGImageGetHeight(self.CGImage))];
+    CGImageRef imageRef = vImageCreateDecompressedImage(processedImage);
+    CGImageRelease(processedImage);
     UIImage *image = [UIImage imageWithCGImage:imageRef scale:self.scale orientation:self.imageOrientation];
     CGImageRelease(imageRef);
     return image;
@@ -84,8 +113,9 @@ static CGImageRef vImageCreateDecompressedImage(CGImageRef image)
 
 - (UIImage *)vImage_flippedImageWithHorizontal:(BOOL)horizontal
 {
-    CGImageRef imageRef = [vImageProcessor flippedImageWithImage:self.CGImage horizontal:horizontal];
-    imageRef = vImageCreateDecompressedImage(imageRef);
+    CGImageRef processedImage = [vImageProcessor flippedImageWithImage:self.CGImage horizontal:horizontal];
+    CGImageRef imageRef = vImageCreateDecompressedImage(processedImage);
+    CGImageRelease(processedImage);
     UIImage *image = [UIImage imageWithCGImage:imageRef scale:self.scale orientation:self.imageOrientation];
     CGImageRelease(imageRef);
     return image;
@@ -93,8 +123,9 @@ static CGImageRef vImageCreateDecompressedImage(CGImageRef image)
 
 - (UIImage *)vImage_rotatedImageWithRadians:(CGFloat)radians
 {
-    CGImageRef imageRef = [vImageProcessor rotatedImageWithImage:self.CGImage radians:radians];
-    imageRef = vImageCreateDecompressedImage(imageRef);
+    CGImageRef processedImage = [vImageProcessor rotatedImageWithImage:self.CGImage radians:vImageRadiansConvert(radians)];
+    CGImageRef imageRef = vImageCreateDecompressedImage(processedImage);
+    CGImageRelease(processedImage);
     UIImage *image = [UIImage imageWithCGImage:imageRef scale:self.scale orientation:self.imageOrientation];
     CGImageRelease(imageRef);
     return image;
@@ -102,8 +133,9 @@ static CGImageRef vImageCreateDecompressedImage(CGImageRef image)
 
 - (UIImage *)vImage_shearedImageWithHorizontal:(BOOL)horizontal offset:(CGVector)offset translation:(CGFloat)translation slope:(CGFloat)slope scale:(CGFloat)scale
 {
-    CGImageRef imageRef = [vImageProcessor shearedImageWithImage:self.CGImage horizontal:horizontal offset:offset translation:translation slope:slope scale:scale];
-    imageRef = vImageCreateDecompressedImage(imageRef);
+    CGImageRef processedImage = [vImageProcessor shearedImageWithImage:self.CGImage horizontal:horizontal offset:vImageVectorConvert(offset) translation:(horizontal ? translation : -translation) slope:slope scale:scale];
+    CGImageRef imageRef = vImageCreateDecompressedImage(processedImage);
+    CGImageRelease(processedImage);
     UIImage *image = [UIImage imageWithCGImage:imageRef scale:self.scale orientation:self.imageOrientation];
     CGImageRelease(imageRef);
     return image;
@@ -111,11 +143,14 @@ static CGImageRef vImageCreateDecompressedImage(CGImageRef image)
 
 - (UIImage *)vImage_affineTransformedImageWithTransform:(CGAffineTransform)transform
 {
-    CGImageRef imageRef = [vImageProcessor affineTransformedImageWithImage:self.CGImage transform:transform];
-    imageRef = vImageCreateDecompressedImage(imageRef);
+    CGImageRef processedImage = [vImageProcessor affineTransformedImageWithImage:self.CGImage transform:transform];
+    CGImageRef imageRef = vImageCreateDecompressedImage(processedImage);
+    CGImageRelease(processedImage);
     UIImage *image = [UIImage imageWithCGImage:imageRef scale:self.scale orientation:self.imageOrientation];
     CGImageRelease(imageRef);
     return image;
 }
 
 @end
+
+#endif

@@ -5,6 +5,8 @@
 //  Created by lizhuoli on 2017/11/10.
 //
 
+#if TARGET_OS_IOS || TARGET_OS_TV || TARGET_OS_WATCH
+
 #import <UIKit/UIKit.h>
 
 @interface UIImage (vImageProcess)
@@ -27,3 +29,5 @@
 - (UIImage *)vImage_affineTransformedImageWithTransform:(CGAffineTransform)transform;
 
 @end
+
+#endif
